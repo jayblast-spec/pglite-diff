@@ -1,5 +1,9 @@
 # pglite-diff
 
+[![CI](https://github.com/jayblast-spec/pglite-diff/actions/workflows/ci.yml/badge.svg)](https://github.com/jayblast-spec/pglite-diff/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/pglite-diff)](https://www.npmjs.com/package/pglite-diff)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+
 **Runs the same query probes against two SQL setups (e.g. two versions of a migration) on isolated in-memory Postgres instances and reports exactly what differs — catches migration regressions before they touch a real database.**
 
 ## The gap this fills
@@ -35,6 +39,33 @@ Probe "subscription pricing": MISMATCH
   row 0: changed columns [annual_price]
     before: {"plan":"starter","monthly_price":"10","annual_price":"96.0"}
     after:  {"plan":"starter","monthly_price":"10","annual_price":"108.0"}
+```
+
+## Use it as a GitHub Action or CLI
+
+```yaml
+- uses: jayblast-spec/pglite-diff@main
+  with:
+    config: ./pglite-diff.config.mjs
+```
+
+Or directly:
+
+```bash
+npx pglite-diff ./pglite-diff.config.mjs
+```
+
+Where the config file default-exports `{ before, after, probes }`:
+
+```js
+// pglite-diff.config.mjs
+export default {
+  before: { setup: `/* schema + migrations + seed data, as they are today */` },
+  after:  { setup: `/* schema + migrations + seed data, after your change */` },
+  probes: [
+    { name: "pricing", sql: "select plan, annual_price from subscriptions order by id" },
+  ],
+};
 ```
 
 ## Install

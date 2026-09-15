@@ -1,0 +1,45 @@
+name: 'pglite-diff'
+description: 'Diffs two SQL setups query results on isolated in-memory Postgres instances -- catches migration regressions.'
+author: 'jayblast-spec'
+branding:
+  icon: 'database'
+  color: 'blue'
+
+inputs:
+  config:
+    description: 'Path to a config module default-exporting { before, after, probes } -- see README.md'
+    required: true
+
+outputs:
+  ok:
+    description: '"true" if every probe matched, "false" otherwise'
+    value: ${{ steps.run.outputs.ok }}
+  summary:
+    description: 'Human-readable summary of the diff report'
+    value: ${{ steps.run.outputs.summary }}
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22.x'
+
+    - name: Build pglite-diff
+      shell: bash
+      run: |
+        cd "${{ github.action_path }}"
+        npm ci
+        npm run build
+
+    - name: Run pglite-diff
+      id: run
+      shell: bash
+      run: |
+        set +e
+        OUTPUT_FILE=$(mktemp)
+        node "${{ github.action_path }}/dist/cli.js" "${{ inputs.config }}" | tee "$OUTPUT_FILE"
+        EXIT_CODE=${PIPESTATUS[0]}
+        set -e
+        { echo "summary<<PGLITE_DIFF_EOF"; cat "$OUTPUT_FILE"; echo "PGLITE_DIFF_EOF"; } >> "$GITHUB_OUTPUT"
+        if [ "$EXIT_CODE" -ne 0 ]; then echo "ok=false" >> "$GITHUB_OUTPUT"; exit 1; else echo "ok=true" >> "$GITHUB_OUTPUT"; fi
