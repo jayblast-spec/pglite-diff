@@ -4,6 +4,8 @@
 [![npm](https://img.shields.io/npm/v/pglite-diff)](https://www.npmjs.com/package/pglite-diff)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
+![pglite-diff: diffing before/after migration query results on isolated Postgres](./docs/banner.svg)
+
 **Runs the same query probes against two SQL setups (e.g. two versions of a migration) on isolated in-memory Postgres instances and reports exactly what differs — catches migration regressions before they touch a real database.**
 
 ## The gap this fills

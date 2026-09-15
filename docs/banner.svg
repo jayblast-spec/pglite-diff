@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 260" width="860" height="260" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <rect x="1" y="1" width="858" height="258" rx="12" fill="#ffffff" stroke="#d0d7de" stroke-width="1"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2328">pglite-diff: catching a migration regression before it ships</text>
+
+  <rect x="40" y="60" width="220" height="80" rx="8" fill="#f6f8fa" stroke="#57606a"/>
+  <text x="150" y="82" text-anchor="middle" font-size="11" font-weight="600" fill="#1f2328">before: migrations 1..N</text>
+  <text x="150" y="100" text-anchor="middle" font-size="10" fill="#334">PGlite (real Postgres, WASM)</text>
+  <text x="150" y="114" text-anchor="middle" font-size="10" fill="#334">no Docker, in-process</text>
+
+  <rect x="40" y="150" width="220" height="80" rx="8" fill="#f6f8fa" stroke="#57606a"/>
+  <text x="150" y="172" text-anchor="middle" font-size="11" font-weight="600" fill="#1f2328">after: migrations 1..N+1</text>
+  <text x="150" y="190" text-anchor="middle" font-size="10" fill="#334">PGlite (real Postgres, WASM)</text>
+  <text x="150" y="204" text-anchor="middle" font-size="10" fill="#334">same query probes</text>
+
+  <path d="M260 100 C 320 100, 320 145, 380 145" stroke="#57606a" stroke-width="2" fill="none" marker-end="url(#arrow8)"/>
+  <path d="M260 190 C 320 190, 320 145, 380 145" stroke="#57606a" stroke-width="2" fill="none" marker-end="url(#arrow8)"/>
+
+  <rect x="380" y="110" width="210" height="70" rx="8" fill="#fff7e6" stroke="#d4a017"/>
+  <text x="485" y="133" text-anchor="middle" font-size="11" font-weight="600" fill="#7a5200">diffScenarios(before, after,</text>
+  <text x="485" y="149" text-anchor="middle" font-size="11" font-weight="600" fill="#7a5200">probes)</text>
+  <text x="485" y="167" text-anchor="middle" font-size="10" fill="#334">runs identical probes on both</text>
+
+  <path d="M590 145 H660" stroke="#57606a" stroke-width="2" marker-end="url(#arrow8)"/>
+
+  <rect x="660" y="100" width="170" height="34" rx="6" fill="#dafbe1" stroke="#1a7f37"/>
+  <text x="745" y="122" text-anchor="middle" font-size="10" font-weight="700" fill="#116329">no diff: safe migration</text>
+
+  <rect x="660" y="145" width="170" height="34" rx="6" fill="#ffebe9" stroke="#cf222e"/>
+  <text x="745" y="167" text-anchor="middle" font-size="10" font-weight="700" fill="#82071e">row/shape diff: regression</text>
+
+  <text x="430" y="222" text-anchor="middle" font-size="11" fill="#57606a">Real PostgreSQL under the hood, isolated and disposable -- catches what a migration</text>
+  <text x="430" y="240" text-anchor="middle" font-size="11" fill="#57606a">silently changed in query results, before it ever touches a live database.</text>
+
+  <defs>
+    <marker id="arrow8" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#57606a"/>
+    </marker>
+  </defs>
+</svg>
