@@ -1,0 +1,60 @@
+{
+  "name": "pglite-diff",
+  "version": "0.1.0",
+  "description": "Runs the same query probes against two SQL setups (e.g. two versions of a migration) on isolated in-memory Postgres instances and reports exactly what differs -- catches migration regressions before they touch a real database.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm run build && npm run test"
+  },
+  "keywords": [
+    "postgres",
+    "pglite",
+    "migrations",
+    "testing",
+    "regression-testing",
+    "sql",
+    "diff"
+  ],
+  "author": "jayblast-spec",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jayblast-spec/pglite-diff.git"
+  },
+  "homepage": "https://github.com/jayblast-spec/pglite-diff#readme",
+  "bugs": {
+    "url": "https://github.com/jayblast-spec/pglite-diff/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "peerDependencies": {
+    "@electric-sql/pglite": "^0.2.0 || ^0.3.0 || ^0.4.0 || ^0.5.0"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "@types/node": "^22.10.2",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.2",
+    "vitest": "^5.0.1"
+  }
+}
