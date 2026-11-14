@@ -103,6 +103,11 @@ npm test
 npm run build
 ```
 
+## Support and ownership
+
+- **CI Gate Setup (48h, $149)** — a PR that wires this check into your GitHub Actions with a passing run: https://veroputech.gumroad.com/l/ci-gate-setup-48h
+- **Own it** — this repo, its npm package and the copyright are for sale as part of the [CI / Infra Tool Pack](https://veroputech.gumroad.com/l/ci-infra-tool-pack). Using it under MIT stays free either way.
+
 ## License
 
 MIT
