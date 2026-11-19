@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>pglite-diff</title>
+  <meta name="description" content="Run the same query probes against two SQL setups on isolated in-memory Postgres and report exactly what differs." />
+  <link rel="canonical" href="https://jayblast-spec.github.io__BASE_PATH__/" />
+  <link rel="stylesheet" href="__ASSET_PREFIX__/site.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="wrap top-row">
+      <a class="brand" href="__BASE_PATH__/">pglite-diff</a>
+      <nav aria-label="Page">
+        <a href="#what">What it does</a>
+        <a href="#install">Install</a>
+        <a href="#usage">Usage</a>
+        <a href="#links">Links</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <h1>Diff two migration paths before they touch a real database</h1>
+    <p class="lead">pglite-diff runs the same query probes against two SQL setups — for example, two versions of a migration — on isolated in-memory Postgres instances and reports exactly what differs.</p>
+    <img class="banner" src="__ASSET_PREFIX__/banner.svg" alt="Diagram of pglite-diff comparing before and after migrations on PGlite, then reporting either no diff or a row change." />
+
+    <section id="what">
+      <h2>What it does</h2>
+      <p><a href="https://pglite.dev">PGlite</a> is real PostgreSQL compiled to WASM, so a test can spin up a database in-process without Docker. Checking that one migration runs is common. The risky question, when a migration history is squashed, rewritten, or reordered, is whether the new path produces the same query-visible results as the path it replaced.</p>
+      <p>Each scenario’s setup SQL runs on its own PGlite instance. Every probe query then runs on both, and the results are compared row by row and column by column. The report names the probe, the row, the columns that changed, and the before and after values. A probe that fails on one side, such as a renamed column, is reported on its own rather than hidden inside a data mismatch. Setup failures are also separate, and they name which side failed to build.</p>
+      <p>Row comparison is positional. Probes need an explicit <code>ORDER BY</code> so the diff is deterministic. pglite-diff is not a migration runner and it does not diff schemas; two schemas that return the same probe results are treated as equivalent.</p>
+    </section>
+
+    <section id="install">
+      <h2>Install</h2>
+      <pre><code>npm install --save-dev pglite-diff @electric-sql/pglite</code></pre>
+      <p>Requires Node.js 20 or newer. <code>@electric-sql/pglite</code> is a peer dependency.</p>
+    </section>
+
+    <section id="usage">
+      <h2>Usage</h2>
+      <h3>Library</h3>
+      <pre><code>import { diffScenarios } from "pglite-diff";
+
+const report = await diffScenarios(
+  { setup: originalMigrationSql },
+  { setup: refactoredMigrationSql },
+  [
+    {
+      name: "subscription pricing",
+      sql: "select plan, monthly_price, annual_price from subscriptions order by id",
+    },
+  ]
+);
+
+if (!report.ok) {
+  console.error(JSON.stringify(report, null, 2));
+  process.exit(1);
+}</code></pre>
+      <pre><code>Overall: REGRESSION DETECTED
+
+Probe "subscription pricing": MISMATCH
+  row 0: changed columns [annual_price]
+    before: {"plan":"starter","monthly_price":"10","annual_price":"96.0"}
+    after:  {"plan":"starter","monthly_price":"10","annual_price":"108.0"}</code></pre>
+
+      <h3>GitHub Action</h3>
+      <pre><code>- uses: jayblast-spec/pglite-diff@main
+  with:
+    config: ./pglite-diff.config.mjs</code></pre>
+
+      <h3>CLI</h3>
+      <pre><code>npx pglite-diff ./pglite-diff.config.mjs</code></pre>
+      <p>The config file default-exports <code>{ before, after, probes }</code>:</p>
+      <pre><code>// pglite-diff.config.mjs
+export default {
+  before: { setup: `/* schema, migrations, and seed data, as they are today */` },
+  after: { setup: `/* the same, after the change */` },
+  probes: [
+    { name: "pricing", sql: "select plan, annual_price from subscriptions order by id" },
+  ],
+};</code></pre>
+      <p>A local script that shows a fat-fingered discount surviving a migration squash is in <a href="https://github.com/jayblast-spec/pglite-diff/blob/main/examples/demo.ts"><code>examples/demo.ts</code></a>. Run it with <code>npx tsx examples/demo.ts</code>.</p>
+    </section>
+
+    <section id="links">
+      <h2>Links</h2>
+      <ul>
+        <li><a href="https://github.com/jayblast-spec/pglite-diff">Repository</a></li>
+        <li><a href="https://www.npmjs.com/package/pglite-diff">npm package</a></li>
+        <li><a href="https://pglite.dev">PGlite</a></li>
+        <li><a href="https://github.com/jayblast-spec/pglite-diff/blob/main/LICENSE">MIT license</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <p>Built by <a href="https://github.com/jayblast-spec">ArkNet Digital</a>. MIT licensed.</p>
+  </footer>
+</body>
+</html>

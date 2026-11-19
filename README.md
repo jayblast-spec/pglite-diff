@@ -3,7 +3,7 @@
 [![CI](https://github.com/jayblast-spec/pglite-diff/actions/workflows/ci.yml/badge.svg)](https://github.com/jayblast-spec/pglite-diff/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/pglite-diff)](https://www.npmjs.com/package/pglite-diff)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
-[![Docs](https://img.shields.io/badge/docs-pglite--diff.vercel.app-5eeab0)](https://pglite-diff.vercel.app)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-5eeab0)](https://jayblast-spec.github.io/pglite-diff/)
 
 ![pglite-diff: diffing before/after migration query results on isolated Postgres](./docs/banner.svg)
 
